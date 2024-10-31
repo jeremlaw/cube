@@ -92,6 +92,36 @@ void printFace(Face *face)
     printf("\n");
 }
 
+void printRow(Face *face, int row)
+{
+    for (int col = 0; col < 3; col++) {
+        switch ((*face)[row][col]) {
+            case RED:
+                printf(red_square " ");
+                break;
+            case YELLOW:
+                printf(yellow_square " ");
+                break;
+            case ORANGE:
+                printf(orange_square " ");
+                break;
+            case WHITE:
+                printf(white_square " ");
+                break;
+            case GREEN:
+                printf(green_square " ");
+                break;
+            case BLUE:
+                printf(blue_square " ");
+                break;
+            default:
+                break;
+        }
+        printf(reset);
+    }
+    printf("  ");
+}
+
 /********** printCube ********
  *
  *      Displays the given cube
@@ -101,16 +131,15 @@ void printFace(Face *face)
  ******************************/
 void printCube(Cube *cube)
 {
-    printf("Front Face:\n");
-    printFace(&(cube->Front));
-    printf("Left Face:\n");
-    printFace(&(cube->Left));
-    printf("Back Face:\n");
-    printFace(&(cube->Back));
-    printf("Right Face:\n");
-    printFace(&(cube->Right));
-    printf("Top Face:\n");
-    printFace(&(cube->Top));
-    printf("Bottom Face:\n");
-    printFace(&(cube->Bottom));
+    printf("Left    Front   Right   Back     Top    Bottom\n");
+    for (int row = 0; row < 3; row++) {
+        printRow(&(cube->Left), row);
+        printRow(&(cube->Front), row);
+        printRow(&(cube->Right), row);
+        printRow(&(cube->Back), row);
+        printRow(&(cube->Top), row);
+        printRow(&(cube->Bottom), row);
+        printf("\n");
+    }
+    printf("\n");
 }

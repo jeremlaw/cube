@@ -15,5 +15,9 @@ int main()
     printCube(cube);
     U(cube);
     printCube(cube);
+    U(cube);
+    printCube(cube);
+    U2(cube);
+    printCube(cube);
     freeCube(cube);
 }
