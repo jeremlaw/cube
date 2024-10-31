@@ -59,40 +59,12 @@ void freeCube(Cube *cube)
     free(cube);
 }
 
-void printFace(Face *face)
-{
-    for (int row = 0; row < 3; row++) {
-        for (int col = 0; col < 3; col++) {
-            switch ((*face)[row][col]) {
-                case RED:
-                    printf(red_square " ");
-                    break;
-                case YELLOW:
-                    printf(yellow_square " ");
-                    break;
-                case ORANGE:
-                    printf(orange_square " ");
-                    break;
-                case WHITE:
-                    printf(white_square " ");
-                    break;
-                case GREEN:
-                    printf(green_square " ");
-                    break;
-                case BLUE:
-                    printf(blue_square " ");
-                    break;
-                default:
-                    break;
-            }
-            printf(reset);
-        }
-        printf("\n");
-    }
-    printf("\n");
-}
-
-void printRow(Face *face, int row)
+/********** printRow ********
+ *
+ *      Displays a row of the given cube face     
+ *      
+ ******************************/
+static void printRow(Face *face, int row)
 {
     for (int col = 0; col < 3; col++) {
         switch ((*face)[row][col]) {
@@ -122,14 +94,14 @@ void printRow(Face *face, int row)
     printf("  ");
 }
 
-/********** printCube ********
+/********** display ********
  *
  *      Displays the given cube
  *
  *      Note: Throws runtime error if given cube pointer is NULL
  *      
  ******************************/
-void printCube(Cube *cube)
+void display(Cube *cube)
 {
     printf("Left    Front   Right   Back     Top    Bottom\n");
     for (int row = 0; row < 3; row++) {

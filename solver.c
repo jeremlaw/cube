@@ -12,12 +12,8 @@
 int main()
 {
     Cube *cube = newCube();
-    printCube(cube);
-    U(cube);
-    printCube(cube);
-    U(cube);
-    printCube(cube);
-    U2(cube);
-    printCube(cube);
+    display(cube);
+    R(cube);
+    display(cube);
     freeCube(cube);
 }

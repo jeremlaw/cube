@@ -24,6 +24,6 @@ typedef struct {
 
 Cube *newCube();
 void freeCube(Cube *cube);
-void printCube(Cube *cube);
+void display(Cube *cube);
 
 #endif
