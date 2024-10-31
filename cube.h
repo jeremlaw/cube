@@ -10,14 +10,20 @@
 #ifndef CUBE_H
 #define CUBE_H
 
-typedef enum { WHITE, YELLOW, RED, GREEN, ORANGE, BLUE } Color;
-typedef Color Face[3][3];
+typedef enum { RED, YELLOW, ORANGE, WHITE, GREEN, BLUE } Color;
+typedef int Face[3][3];
 
 typedef struct {
-    Face faces[6];
+    Face Front;
+    Face Top;
+    Face Back;
+    Face Bottom;
+    Face Left;
+    Face Right;
 } Cube;
 
 Cube *newCube();
 void freeCube(Cube *cube);
+void printCube(Cube *cube);
 
 #endif

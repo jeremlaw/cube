@@ -8,12 +8,12 @@
 
 ############## Variables ###############
 
-CC = gcc 					# The compiler being used
-CFLAGS = -g 				# Compiler flags
-RM = rm -f					# Command to remove files
+CC = gcc 						# The compiler being used
+CFLAGS = -g 					# Compiler flags
+RM = rm -f						# Command to remove files
 
-TARGET = solver				# Target executable
-OBJS = cube.o solver.o  	# Object files needed for target 
+TARGET = solver					# Target executable
+OBJS = cube.o solver.o moves.o 	# Object files needed for target 
 
 ############### Rules ###############
 

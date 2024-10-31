@@ -11,6 +11,14 @@
 #include <assert.h>
 #include "cube.h"
 
+#define red_square    "\033[31m\u25A0\033[0m"
+#define yellow_square   "\033[33m\u25A0\033[0m"
+#define orange_square   "\033[38;5;208m\u25A0\033[0m"
+#define white_square    "\033[37m\u25A0\033[0m"
+#define green_square    "\033[32m\u25A0\033[0m"
+#define blue_square     "\033[34m\u25A0\033[0m"
+#define reset   "\x1B[0m"
+
 /********** newCube ********
  *
  *      Creates and initializes a new cube
@@ -25,11 +33,14 @@ Cube *newCube()
     Cube *cube = malloc(sizeof(Cube));
     assert(cube);
 
-    for (Color face = WHITE; face <= ORANGE; face++) {
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                cube->faces[face][row][col] = face;
-            }
+    for (int row = 0; row < 3; row++) {
+        for (int col = 0; col < 3; col++) {
+            cube->Front[row][col] = RED;
+            cube->Top[row][col] = YELLOW;
+            cube->Back[row][col] = ORANGE;
+            cube->Bottom[row][col] = WHITE;
+            cube->Right[row][col] = GREEN;
+            cube->Left[row][col] = BLUE;
         }
     }
     return cube;
@@ -39,13 +50,67 @@ Cube *newCube()
  *
  *      Frees heap memory allocated by newCube
  *
- *      Note:
- *          Given cube becomes NULL when freeCube is called
- *          Throws runtime error if given cube pointer is NULL
+ *      Note: Throws runtime error if given cube pointer is NULL
  *      
  ******************************/
 void freeCube(Cube *cube)
 {
     assert(cube);
     free(cube);
+}
+
+void printFace(Face *face)
+{
+    for (int row = 0; row < 3; row++) {
+        for (int col = 0; col < 3; col++) {
+            switch ((*face)[row][col]) {
+                case RED:
+                    printf(red_square " ");
+                    break;
+                case YELLOW:
+                    printf(yellow_square " ");
+                    break;
+                case ORANGE:
+                    printf(orange_square " ");
+                    break;
+                case WHITE:
+                    printf(white_square " ");
+                    break;
+                case GREEN:
+                    printf(green_square " ");
+                    break;
+                case BLUE:
+                    printf(blue_square " ");
+                    break;
+                default:
+                    break;
+            }
+            printf(reset);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+/********** printCube ********
+ *
+ *      Displays the given cube
+ *
+ *      Note: Throws runtime error if given cube pointer is NULL
+ *      
+ ******************************/
+void printCube(Cube *cube)
+{
+    printf("Front Face:\n");
+    printFace(&(cube->Front));
+    printf("Left Face:\n");
+    printFace(&(cube->Left));
+    printf("Back Face:\n");
+    printFace(&(cube->Back));
+    printf("Right Face:\n");
+    printFace(&(cube->Right));
+    printf("Top Face:\n");
+    printFace(&(cube->Top));
+    printf("Bottom Face:\n");
+    printFace(&(cube->Bottom));
 }
