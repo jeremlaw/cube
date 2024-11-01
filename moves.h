@@ -47,5 +47,7 @@ void B2(Cube *cube);
 
 /* M Move */
 void M(Cube *cube);
+void Mp(Cube *cube);
+void M2(Cube *cube);
 
 #endif

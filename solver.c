@@ -10,10 +10,9 @@
 #include "moves.h"
 
 int main()
-{
+{   
+    printf("\n");
     Cube *cube = newCube();
-    display(cube);
-    R(cube);
     display(cube);
     freeCube(cube);
 }
