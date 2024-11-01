@@ -127,6 +127,8 @@ static void turnLayer180H(Face *f1, Face *f2, Face *f3, Face *f4, int row)
     }
 }
 
+/**************************** U Moves ******************************/
+
 void U(Cube *cube)
 {
     Face *f = &(cube->Front);
@@ -156,6 +158,8 @@ void U2(Cube *cube)
     turnLayer180H(f, r, b, l, 0);
     rotateFace180(&(cube->Top));
 }
+
+/**************************** D Moves ******************************/
 
 void D(Cube *cube)
 {
@@ -257,6 +261,8 @@ static void turnLayer180V(Face *f1, Face *f2, Face *f3, Face *f4, int col)
     }    
 }
 
+/**************************** R Moves ******************************/
+
 void R(Cube *cube)
 {
     Face *f = &(cube->Front);
@@ -286,6 +292,8 @@ void R2(Cube *cube)
     turnLayer180V(f, d, b, u, 2);
     rotateFace180(&(cube->Right));
 }
+
+/**************************** L Moves ******************************/
 
 void L(Cube *cube)
 {
@@ -317,6 +325,8 @@ void L2(Cube *cube)
     rotateFace180(&(cube->Left));
 }
 
+/**************************** M Moves ******************************/
+
 void M(Cube *cube)
 {
     Face *f = &(cube->Front);
@@ -342,4 +352,36 @@ void M2(Cube *cube)
     Face *b = &(cube->Back);
     Face *d = &(cube->Bottom);
     turnLayer180V(f, d, b, u, 1);
+}
+
+/**************************** F Moves ******************************/
+
+void F(Cube *cube)
+{
+    Face *r = &(cube->Right);
+    Face *u = &(cube->Top);
+    Face *l = &(cube->Left);
+    Face *d = &(cube->Bottom);
+    turnLayer90V(r, u, l, d, 2);
+    rotateFace90(&(cube->Front), true);
+}
+
+void Fp(Cube *cube)
+{
+    Face *r = &(cube->Right);
+    Face *u = &(cube->Top);
+    Face *l = &(cube->Left);
+    Face *d = &(cube->Bottom);
+    turnLayer90V(r, d, l, d, 2);
+    rotateFace90(&(cube->Front), false);
+}
+
+void F2(Cube *cube)
+{
+    Face *r = &(cube->Right);
+    Face *u = &(cube->Top);
+    Face *l = &(cube->Left);
+    Face *d = &(cube->Bottom);
+    turnLayer180V(r, u, l, d, 0);
+    rotateFace180(&(cube->Front));;
 }

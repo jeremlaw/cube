@@ -103,13 +103,13 @@ static void printRow(Face *face, int row)
  ******************************/
 void display(Cube *cube)
 {
-    printf("Left    Front   Right   Back     Top    Bottom\n");
+    printf("Left    Front   Right    Top    Back    Bottom\n");
     for (int row = 0; row < 3; row++) {
         printRow(&(cube->Left), row);
         printRow(&(cube->Front), row);
         printRow(&(cube->Right), row);
-        printRow(&(cube->Back), row);
         printRow(&(cube->Top), row);
+        printRow(&(cube->Back), row);
         printRow(&(cube->Bottom), row);
         printf("\n");
     }
