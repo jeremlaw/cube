@@ -12,12 +12,12 @@ CC = gcc # The compiler being used
 CFLAGS = -g # Compiler flags
 RM = rm -f # Command to remove files
 
-TARGET = solver # Target executable
-OBJS = cube.o solver.o moves.o # Object files needed for target 
+TARGET = cubesim # Target executable
+OBJS = cube.o cubesim.o moves.o # Object files needed for target 
 
 ############### Rules ###############
 
-all: solver
+all: cubesim
 
 ## Compile step (.c files -> .o files)
 
