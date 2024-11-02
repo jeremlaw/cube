@@ -10,46 +10,65 @@
 #include <stdbool.h>
 #include "moves.h"
 
-static void swap(Face *face, int i, int j)
-{
-    Color temp = (*face)[i][j];
-    (*face)[i][j] = (*face)[2 - i][2 - j];
-    (*face)[2 - i][2 - j] = temp;
-}
+#define CW true
+#define CCW false
 
 /********** rotateFace90 ********
  *
  *      Rotates the given face by 90 degrees in the specified direction
  * 
- *      Used U, U', D, D', R, R', L, L', F, F', B, and B'.
+ *      Used by U, U', D, D', R, R', L, L', F, F', B, and B'
+ * 
+ *      Note: Only changes the actual face rotated, not any surrounding
+ *            faces. The rest is handled by various "turn[XYZ]180" functions.
  *      
  ******************************/
 static void rotateFace90(Face *face, bool cw)
 {
-    Color temp1 = (*face)[0][0];
-    Color temp2 = (*face)[0][1];
+    Color temp1 = (*face)[0][0]; /* Store the top left corner */
+    Color temp2 = (*face)[0][1]; /* Store the top edge */
 
     if (cw) {
+        /* Permute Corners */
         (*face)[0][0] = (*face)[2][0];
-        (*face)[0][1] = (*face)[1][0];
         (*face)[2][0] = (*face)[2][2];
-        (*face)[1][0] = (*face)[2][1];
         (*face)[2][2] = (*face)[0][2];
-        (*face)[2][1] = (*face)[1][2];
         (*face)[0][2] = temp1;
+
+        /* Permute Edges */
+        (*face)[0][1] = (*face)[1][0];
+        (*face)[1][0] = (*face)[2][1];
+        (*face)[2][1] = (*face)[1][2];
         (*face)[1][2] = temp2;
     } else {
+        /* Permute Corners */
         (*face)[0][0] = (*face)[0][2];
-        (*face)[0][1] = (*face)[1][2];
         (*face)[0][2] = (*face)[2][2];
-        (*face)[1][2] = (*face)[2][1];
         (*face)[2][2] = (*face)[2][0];
-        (*face)[2][1] = (*face)[1][0];
         (*face)[2][0] = temp1;
+        /* Permute Edges */
+        (*face)[0][1] = (*face)[1][2];
+        (*face)[1][2] = (*face)[2][1];
+        (*face)[2][1] = (*face)[1][0];
         (*face)[1][0] = temp2;
     }
 }
 
+/********** rotateSquare180 ********
+ *
+ *      Given a faces and the position of a square within
+ *      the face, rotates the square by 180 degrees and
+ *      swaps it with the square at its new position 
+ * 
+ *      Used by rotateFace180
+ *      
+ ******************************/
+static void rotateSquare180(Face *face, int i, int j)
+{
+    Color temp = (*face)[i][j];
+    (*face)[i][j] = (*face)[2 - i][2 - j];
+    (*face)[2 - i][2 - j] = temp;
+}
 /********** rotateFace180 ********
  *
  *      Rotates the given face by 180 degrees in the specified direction
@@ -59,71 +78,86 @@ static void rotateFace90(Face *face, bool cw)
  ******************************/
 static void rotateFace180(Face *face)
 {
-    swap(face, 0, 0);
-    swap(face, 0, 1);
-    swap(face, 0, 2);
-    swap(face, 1, 2);
+    /* Rotate the upper left lower right squares */
+    rotateSquare180(face, 0, 0);
+
+    /* Rotate the upper right and lower left triangles */
+    rotateSquare180(face, 0, 1);
+    rotateSquare180(face, 0, 2);
+    rotateSquare180(face, 1, 2);
 }
 
 /*************************************************************************
- *                        U, U', U2, D, D' and D2                        *
+ *                 y-axis turns: U, U', U2, D, D' and D2                 *
  *************************************************************************/
 
-/********** turnLayer90H ********
+/********** turnYLayer90 ********
  *
- *      Turns the given horizontal layer 90 degrees
+ *      Turns the given layer 90 degrees about the y-axis
  * 
  *      A layer is specified by its 4 faces and row index.
  *      Row 0 is the top layer and row 2 is the bottom layer.
  *      
  *      The turning direction is specified by the order of the faces in
  *      the layer. f1 is replaced by f2, f2 by f3, f3 by f4, and f4 by f1.
+ * 
+ *      Note: Does not change the face rotated. This is handled by 
+ *            rotateFace90.
  *      
  ******************************/
-static void turnLayer90H(Face *f1, Face *f2, Face *f3, Face *f4, int row)
+static void turnYLayer90(Face *f1, Face *f2, Face *f3, Face *f4, int row)
 {
+    /* Store specified row in face f1 */
     Color temp1[3];
-
     for (int col = 0; col < 3; col++) {
         temp1[col] = (*f1)[row][col];
+    }
+    /* Replace rows in face f1 with corresponding row in f2 */
+    for (int col = 0; col < 3; col++) {
         (*f1)[row][col] = (*f2)[row][col];
     }
+    /* Replace row in face f2 with corresponding
+     * row in f3, accounting for a flip */
     for (int col = 0; col < 3; col++) {
         (*f2)[row][col] = (*f3)[2 - row][2 - col];
     }
+    /* Replace row in face f3 with corresponding
+     * row in f4, accounting for a flip */
     for (int col = 0; col < 3; col++) {
         (*f3)[2 - row][col] = (*f4)[row][2 - col];
     }
+    /* Replace row in face f4 with corresponding row in f1 */
     for (int col = 0; col < 3; col++) {
         (*f4)[row][col] = temp1[col];
     }
 }
 
-/********** turnLayer180H ********
+/********** turnYLayer180 ********
  *
- *      Turns the given horizontal layer 90 degrees
+ *      Turns the given layer 90 degrees about the y-axis
  * 
  *      A layer is specified by 4 faces and the row index.
- *      
- *      The turning direction is irrelevant.
+ *      Row 0 is the top layer and row 2 is the bottom layer.
+ * 
+ *      Note: Does not change the face rotated. This is handled by 
+ *            rotateFace180.
  *  
  ******************************/
-static void turnLayer180H(Face *f1, Face *f2, Face *f3, Face *f4, int row)
+static void turnYLayer180(Face *f1, Face *f2, Face *f3, Face *f4, int row)
 {
-    Color temp[3];
-
     /* Swap rows in front and back faces */
     for (int col = 0; col < 3; col++) {
-        temp[col] = (*f1)[row][col];
+        Color temp = (*f1)[row][col];
         (*f1)[row][col] = (*f3)[2 - row][2 - col];
-        (*f3)[2 - row][2 - col] = temp[col];
+        (*f3)[2 - row][2 - col] = temp;
+        // rotateSquare180(f1, f3, row, col);
     }
 
     /* Swap rows in right and left faces */
     for (int col = 0; col < 3; col++) {
-        temp[col] = (*f2)[row][col];
+        Color temp = (*f2)[row][col];
         (*f2)[row][col] = (*f4)[row][col];
-        (*f4)[row][col] = temp[col];
+        (*f4)[row][col] = temp;
     }
 }
 
@@ -135,8 +169,8 @@ void U(Cube *cube)
     Face *l = &(cube->Left);
     Face *r = &(cube->Right);
     Face *b = &(cube->Back);
-    turnLayer90H(f, r, b, l, 0);
-    rotateFace90(&(cube->Top), true);
+    turnYLayer90(f, r, b, l, 0);
+    rotateFace90(&(cube->Top), CW);
 }
 
 void Up(Cube *cube)
@@ -145,8 +179,8 @@ void Up(Cube *cube)
     Face *l = &(cube->Left);
     Face *r = &(cube->Right);
     Face *b = &(cube->Back);
-    turnLayer90H(f, l, b, r, 0);
-    rotateFace90(&(cube->Top), false);
+    turnYLayer90(f, l, b, r, 0);
+    rotateFace90(&(cube->Top), CCW);
 }
 
 void U2(Cube *cube)
@@ -155,7 +189,7 @@ void U2(Cube *cube)
     Face *l = &(cube->Left);
     Face *r = &(cube->Right);
     Face *b = &(cube->Back);
-    turnLayer180H(f, r, b, l, 0);
+    turnYLayer180(f, r, b, l, 0);
     rotateFace180(&(cube->Top));
 }
 
@@ -167,7 +201,8 @@ void D(Cube *cube)
     Face *l = &(cube->Left);
     Face *r = &(cube->Right);
     Face *b = &(cube->Back);
-    turnLayer90H(f, l, b, r, 2);
+    turnYLayer90(f, l, b, r, 2);
+    rotateFace90(&(cube->Bottom), CW);
 }
 
 void Dp(Cube *cube)
@@ -176,7 +211,8 @@ void Dp(Cube *cube)
     Face *l = &(cube->Left);
     Face *r = &(cube->Right);
     Face *b = &(cube->Back);
-    turnLayer90H(f, r, b, l, 2);
+    turnYLayer90(f, r, b, l, 2);
+    rotateFace90(&(cube->Bottom), CCW);
 }
 
 void D2(Cube *cube)
@@ -185,22 +221,17 @@ void D2(Cube *cube)
     Face *l = &(cube->Left);
     Face *r = &(cube->Right);
     Face *b = &(cube->Back);
-    turnLayer180H(f, l, b, r, 2);
+    turnYLayer180(f, l, b, r, 2);
+    rotateFace180(&(cube->Bottom));
 }
 
 /*************************************************************************
- *         R, R', R2, L, L', L2, M, M', F, F', F2, B, B', and B2         *
+ *           x-axis turns: R, R', R2, L, L', L2, M, M', and M2           *
  *************************************************************************/
 
-/********** turnLayer90V ********
+/********** turnXLayer90 ********
  *
- *      Turns the given vertical layer 90 degrees
- * 
- *      Will perform an R/L move OR an F/B move depending
- *      on the first and third specified faces.
- *      
- *      f2 and f4 must be the top and bottom faces, while f1 and f3
- *      can be either the right/left faces or the front/back faces.
+ *      Turns the given layer 90 degrees about the x-axis
  * 
  *      A layer is specified by its 4 faces and column index.
  *      Column 0 is the left layer, column 1 is the middle layer,
@@ -208,16 +239,19 @@ void D2(Cube *cube)
  *      
  *      The turning direction is specified by the order of the faces in
  *      the layer. f1 is replaced by f2, f2 by f3, f3 by f4, and f4 by f1.
+ * 
+ *      Note: Does not change the face rotated. This is handled by 
+ *            rotateFace90. 
  *  
- *      
  ******************************/
-static void turnLayer90V(Face *f1, Face *f2, Face *f3, Face *f4, int col)
+static void turnXLayer90(Face *f1, Face *f2, Face *f3, Face *f4, int col)
 {
+    /* Store the specified column in face f1 */
     Color temp[3];
     for (int row = 0; row < 3; row++) {
         temp[row] = (*f1)[row][col];
     }
-
+    /* Permute columns in f1, f2, f3, and f4 */
     for (int row = 0; row < 3; row++) {
         (*f1)[row][col] = (*f2)[row][col];
         (*f2)[row][col] = (*f3)[row][col];
@@ -226,23 +260,17 @@ static void turnLayer90V(Face *f1, Face *f2, Face *f3, Face *f4, int col)
     }
 }
 
-/********** turnLayer180V ********
+/********** turnXLayer180 ********
  *
- *      Turns the given vertical layer 90 degrees
- *      
- *      Will perform an R2/L2 move OR an F2/B2 move
- *      depending on the last two faces specified.
- * 
- *      f1 and f2 must be the top and bottom faces, while f3 and f4
- *      can be either the right/left faces or the front/back faces.
- *      right/left faces are changed  
+ *      Turns the given layer 90 degrees about the x-axis
  * 
  *      A layer is specified by 4 faces and the column index.
- *      
- *      The turning direction is irrelevant.
+ * 
+ *      Note: Does not change the face rotated. This is handled
+ *            by rotateFace180.
  *  
  ******************************/
-static void turnLayer180V(Face *f1, Face *f2, Face *f3, Face *f4, int col)
+static void turnXLayer180(Face *f1, Face *f2, Face *f3, Face *f4, int col)
 {
     Color temp[3];
 
@@ -253,7 +281,7 @@ static void turnLayer180V(Face *f1, Face *f2, Face *f3, Face *f4, int col)
         (*f3)[row][col] = temp[col];
     }
 
-    /* Swap columns in left/right OR front/back faces */
+    /* Swap columns in front/back faces */
     for (int row = 0; row < 3; row++) {
         temp[col] = (*f2)[row][col];
         (*f2)[row][col] = (*f4)[row][col];
@@ -269,8 +297,8 @@ void R(Cube *cube)
     Face *u = &(cube->Top);
     Face *b = &(cube->Back);
     Face *d = &(cube->Bottom);
-    turnLayer90V(f, d, b, u, 2);
-    rotateFace90(&(cube->Right), true);
+    turnXLayer90(f, d, b, u, 2);
+    rotateFace90(&(cube->Right), CW);
 }
 
 void Rp(Cube *cube)
@@ -279,8 +307,8 @@ void Rp(Cube *cube)
     Face *u = &(cube->Top);
     Face *b = &(cube->Back);
     Face *d = &(cube->Bottom);
-    turnLayer90V(f, u, b, d, 2);
-    rotateFace90(&(cube->Right), false);
+    turnXLayer90(f, u, b, d, 2);
+    rotateFace90(&(cube->Right), CCW);
 }
 
 void R2(Cube *cube)
@@ -289,7 +317,7 @@ void R2(Cube *cube)
     Face *u = &(cube->Top);
     Face *b = &(cube->Back);
     Face *d = &(cube->Bottom);
-    turnLayer180V(f, d, b, u, 2);
+    turnXLayer180(f, d, b, u, 2);
     rotateFace180(&(cube->Right));
 }
 
@@ -301,8 +329,8 @@ void L(Cube *cube)
     Face *u = &(cube->Top);
     Face *b = &(cube->Back);
     Face *d = &(cube->Bottom);
-    turnLayer90V(f, u, b, d, 0);
-    rotateFace90(&(cube->Left), true);
+    turnXLayer90(f, u, b, d, 0);
+    rotateFace90(&(cube->Left), CW);
 }
 
 void Lp(Cube *cube)
@@ -311,8 +339,8 @@ void Lp(Cube *cube)
     Face *u = &(cube->Top);
     Face *b = &(cube->Back);
     Face *d = &(cube->Bottom);
-    turnLayer90V(f, d, b, u, 0);
-    rotateFace90(&(cube->Left), false);
+    turnXLayer90(f, d, b, u, 0);
+    rotateFace90(&(cube->Left), CCW);
 }
 
 void L2(Cube *cube)
@@ -321,7 +349,7 @@ void L2(Cube *cube)
     Face *u = &(cube->Top);
     Face *b = &(cube->Back);
     Face *d = &(cube->Bottom);
-    turnLayer180V(f, u, b, d, 0);
+    turnXLayer180(f, u, b, d, 0);
     rotateFace180(&(cube->Left));
 }
 
@@ -333,7 +361,7 @@ void M(Cube *cube)
     Face *u = &(cube->Top);
     Face *b = &(cube->Back);
     Face *d = &(cube->Bottom);
-    turnLayer90V(f, d, b, u, 1);
+    turnXLayer90(f, d, b, u, 1);
 }
 
 void Mp(Cube *cube)
@@ -342,7 +370,7 @@ void Mp(Cube *cube)
     Face *u = &(cube->Top);
     Face *b = &(cube->Back);
     Face *d = &(cube->Bottom);
-    turnLayer90V(f, u, b, d, 1);
+    turnXLayer90(f, u, b, d, 1);
 }
 
 void M2(Cube *cube)
@@ -351,7 +379,131 @@ void M2(Cube *cube)
     Face *u = &(cube->Top);
     Face *b = &(cube->Back);
     Face *d = &(cube->Bottom);
-    turnLayer180V(f, d, b, u, 1);
+    turnXLayer180(f, d, b, u, 1);
+}
+
+/*************************************************************************
+ *                 z-axis turns: F, F', F2, B, B', and B2                *
+ *************************************************************************/
+
+/********** turnZLayer90CW ********
+ *
+ *      Turns the given layer 90 degrees clockwise about the z-axis
+ * 
+ *      A layer is specified by its 4 faces and column index.
+ *      Column 0 is the front layer and column 2 is the back layer.
+ *  
+ ******************************/
+static void turnZLayer90CW(Face *f1, Face *f2, Face *f3, Face *f4, int col)
+{
+    Color temp[3];
+
+    for (int row = 0; row < 3; row++) {
+        temp[row] = (*f1)[row][col];
+        if (col == 2) {
+            (*f1)[row][col] = (*f2)[col][2 - row];
+        } else {
+            (*f1)[row][col] = (*f2)[2 - col][row];
+        }
+        
+    }
+    for (int row = 0; row < 3; row++) {
+        if (col == 2) {
+            (*f2)[col][row] = (*f3)[row][2 - col];
+        } else {
+            (*f2)[2 - col][row] = (*f3)[2 - row][2 - col];
+        }
+    }
+    for (int row = 0; row < 3; row++) {
+        if (col == 2) {
+            (*f3)[row][2 - col] = (*f4)[2 - col][2 - row];
+        } else {
+            (*f3)[row][2 - col] = (*f4)[col][row];
+        }
+    }
+    for (int row = 0; row < 3; row++) {
+        if (col == 2) {
+            (*f4)[2 - col][row] = temp[row];
+        } else {
+            (*f4)[col][2 - row] = temp[row];
+        }
+    }
+}
+
+/********** turnZLayer90CCW ********
+ *
+ *      Turns the given layer 90 degrees counter-clockwise about the z-axis
+ * 
+ *      A layer is specified by its 4 faces and column index.
+ *      Column 0 is the front layer and column 2 is the back layer.
+ *  
+ ******************************/
+static void turnZLayer90CCW(Face *f1, Face *f2, Face *f3, Face *f4, int col)
+{
+    Color temp[3];
+
+    for (int row = 0; row < 3; row++) {
+        temp[row] = (*f1)[row][col];
+        if (col == 2) {
+            (*f1)[row][col] = (*f2)[2 - col][row];
+        } else {
+            (*f1)[row][col] = (*f2)[col][2 - row];
+        }
+    }
+    for (int row = 0; row < 3; row++) {
+        if (col == 2) {
+            (*f2)[2 - col][row] = (*f3)[2 - row][2 - col];
+        } else {
+            (*f2)[col][row] = (*f3)[row][2 - col];
+        }   
+    }
+    for (int row = 0; row < 3; row++) {
+        if (col == 2) {
+            (*f3)[row][2 - col] = (*f4)[col][row];
+        } else {
+            (*f3)[row][2 - col] = (*f4)[2 - col][2 - row];
+        }
+    }
+    for (int row = 0; row < 3; row++) {
+        if (col == 2) {
+            (*f4)[col][2 - row] = temp[row];
+        } else {
+            (*f4)[2 - col][row] = temp[row];
+        }
+    }       
+}
+
+/********** turnZLayer180 ********
+ *
+ *      Turns the given layer 180 degrees about the z-axis
+ * 
+ *      A layer is specified by 4 faces and the column index.
+ *      Column 0 is the front layer and column 2 is the back layer.
+ *  
+ ******************************/
+static void turnZLayer180(Face *f1, Face *f2, Face *f3, Face *f4, int col)
+{
+    Color temp;
+
+    /* Swap columns in left and right faces */
+    for (int row = 0; row < 3; row++) {
+        temp = (*f1)[row][col];
+        (*f1)[row][col] = (*f3)[2 - row][2 - col];
+        (*f3)[2 - row][2 - col] = temp;
+    }
+
+    /* Swap columns in top and bottom faces */
+    for (int row = 0; row < 3; row++) {
+        if (col == 2) {
+            temp = (*f2)[col][row];
+            (*f2)[col][row] = (*f4)[2 - col][2 - row];
+            (*f4)[2 - col][2 - row] = temp;
+        } else {
+            temp = (*f2)[2 - col][row];
+            (*f2)[2 - col][row] = (*f4)[col][2 - row];
+            (*f4)[col][2 - row] = temp;
+        }
+    }    
 }
 
 /**************************** F Moves ******************************/
@@ -362,8 +514,8 @@ void F(Cube *cube)
     Face *u = &(cube->Top);
     Face *l = &(cube->Left);
     Face *d = &(cube->Bottom);
-    turnLayer90V(r, u, l, d, 2);
-    rotateFace90(&(cube->Front), true);
+    turnZLayer90CW(r, u, l, d, 0);
+    rotateFace90(&(cube->Front), CW);
 }
 
 void Fp(Cube *cube)
@@ -372,8 +524,8 @@ void Fp(Cube *cube)
     Face *u = &(cube->Top);
     Face *l = &(cube->Left);
     Face *d = &(cube->Bottom);
-    turnLayer90V(r, d, l, d, 2);
-    rotateFace90(&(cube->Front), false);
+    turnZLayer90CCW(r, d, l, u, 0);
+    rotateFace90(&(cube->Front), CCW);
 }
 
 void F2(Cube *cube)
@@ -382,6 +534,38 @@ void F2(Cube *cube)
     Face *u = &(cube->Top);
     Face *l = &(cube->Left);
     Face *d = &(cube->Bottom);
-    turnLayer180V(r, u, l, d, 0);
-    rotateFace180(&(cube->Front));;
+    turnZLayer180(r, u, l, d, 0);
+    rotateFace180(&(cube->Front));
+}
+
+/**************************** F Moves ******************************/
+
+void B(Cube *cube)
+{
+    Face *r = &(cube->Right);
+    Face *u = &(cube->Top);
+    Face *l = &(cube->Left);
+    Face *d = &(cube->Bottom);
+    turnZLayer90CW(r, d, l, u, 2);
+    rotateFace90(&(cube->Back), CW);
+}
+
+void Bp(Cube *cube)
+{
+    Face *r = &(cube->Right);
+    Face *u = &(cube->Top);
+    Face *l = &(cube->Left);
+    Face *d = &(cube->Bottom);
+    turnZLayer90CCW(r, u, l, d, 2);
+    rotateFace90(&(cube->Back), CCW);
+}
+
+void B2(Cube *cube)
+{
+    Face *r = &(cube->Right);
+    Face *u = &(cube->Top);
+    Face *l = &(cube->Left);
+    Face *d = &(cube->Bottom);
+    turnZLayer180(r, d, l, u, 2);
+    rotateFace180(&(cube->Back));
 }
