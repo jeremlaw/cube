@@ -1,8 +1,4 @@
-# Makefile for Rubik's Cube Solver
-# 
-# Includes build rules for ppmdiff, test and 40image.
-#
-# This Makefile is more verbose than necessary.
+# Makefile for Rubik's Cube Simulator and Solver
 #
 # Created October 31, 2024
 
