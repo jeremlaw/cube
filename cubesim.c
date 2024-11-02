@@ -1,8 +1,11 @@
 /**************************************************************
  *
- *                     solver.c
+ *                     cubesim.c
  *
- *     Rubik's Cube solving program, using the CFOP method.
+ *     Program that simulates a Rubik's Cube, allowing the user
+ *     to interact and perform a variety of turns. These include:
+ *     R, R', R2, L, L', L2, U, U', U2, D, D', D2, F, F', F2,
+ *     B, B', B2, M, M', and M2.
  *
  **************************************************************/
 #include <stdio.h>

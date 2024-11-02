@@ -10,3 +10,13 @@
  *          around the white center
  *
  **************************************************************/
+#ifndef WHITE_CROSS_H
+#define WHITE_CROSS_H
+
+#include "cube.h"
+
+void daisy(Cube *cube);
+
+void white_cross(Cube *cube);
+
+#endif
