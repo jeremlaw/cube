@@ -165,64 +165,64 @@ static void turnYLayer180(Face *f1, Face *f2, Face *f3, Face *f4, int row)
 
 void U(Cube *cube)
 {
-    Face *f = &(cube->Front);
-    Face *l = &(cube->Left);
-    Face *r = &(cube->Right);
-    Face *b = &(cube->Back);
+    Face *f = &((*cube)[FRONT]);
+    Face *l = &((*cube)[LEFT]);
+    Face *r = &((*cube)[RIGHT]);
+    Face *b = &((*cube)[BACK]);
     turnYLayer90(f, r, b, l, 0);
-    rotateFace90(&(cube->Top), CW);
+    rotateFace90(&((*cube)[TOP]), CW);
 }
 
 void Up(Cube *cube)
 {
-    Face *f = &(cube->Front);
-    Face *l = &(cube->Left);
-    Face *r = &(cube->Right);
-    Face *b = &(cube->Back);
+    Face *f = &((*cube)[FRONT]);
+    Face *l = &((*cube)[LEFT]);
+    Face *r = &((*cube)[RIGHT]);
+    Face *b = &((*cube)[BACK]);
     turnYLayer90(f, l, b, r, 0);
-    rotateFace90(&(cube->Top), CCW);
+    rotateFace90(&((*cube)[TOP]), CCW);
 }
 
 void U2(Cube *cube)
 {
-    Face *f = &(cube->Front);
-    Face *l = &(cube->Left);
-    Face *r = &(cube->Right);
-    Face *b = &(cube->Back);
+    Face *f = &((*cube)[FRONT]);
+    Face *l = &((*cube)[LEFT]);
+    Face *r = &((*cube)[RIGHT]);
+    Face *b = &((*cube)[BACK]);
     turnYLayer180(f, r, b, l, 0);
-    rotateFace180(&(cube->Top));
+    rotateFace180(&((*cube)[TOP]));
 }
 
 /**************************** D Moves ******************************/
 
 void D(Cube *cube)
 {
-    Face *f = &(cube->Front);
-    Face *l = &(cube->Left);
-    Face *r = &(cube->Right);
-    Face *b = &(cube->Back);
+    Face *f = &((*cube)[FRONT]);
+    Face *l = &((*cube)[LEFT]);
+    Face *r = &((*cube)[RIGHT]);
+    Face *b = &((*cube)[BACK]);
     turnYLayer90(f, l, b, r, 2);
-    rotateFace90(&(cube->Bottom), CW);
+    rotateFace90(&((*cube)[BOTTOM]), CW);
 }
 
 void Dp(Cube *cube)
 {
-    Face *f = &(cube->Front);
-    Face *l = &(cube->Left);
-    Face *r = &(cube->Right);
-    Face *b = &(cube->Back);
+    Face *f = &((*cube)[FRONT]);
+    Face *l = &((*cube)[LEFT]);
+    Face *r = &((*cube)[RIGHT]);
+    Face *b = &((*cube)[BACK]);
     turnYLayer90(f, r, b, l, 2);
-    rotateFace90(&(cube->Bottom), CCW);
+    rotateFace90(&((*cube)[BOTTOM]), CCW);
 }
 
 void D2(Cube *cube)
 {
-    Face *f = &(cube->Front);
-    Face *l = &(cube->Left);
-    Face *r = &(cube->Right);
-    Face *b = &(cube->Back);
+    Face *f = &((*cube)[FRONT]);
+    Face *l = &((*cube)[LEFT]);
+    Face *r = &((*cube)[RIGHT]);
+    Face *b = &((*cube)[BACK]);
     turnYLayer180(f, l, b, r, 2);
-    rotateFace180(&(cube->Bottom));
+    rotateFace180(&((*cube)[BOTTOM]));
 }
 
 /*************************************************************************
@@ -293,92 +293,92 @@ static void turnXLayer180(Face *f1, Face *f2, Face *f3, Face *f4, int col)
 
 void R(Cube *cube)
 {
-    Face *f = &(cube->Front);
-    Face *u = &(cube->Top);
-    Face *b = &(cube->Back);
-    Face *d = &(cube->Bottom);
+    Face *f = &((*cube)[FRONT]);
+    Face *u = &((*cube)[TOP]);
+    Face *b = &((*cube)[BACK]);
+    Face *d = &((*cube)[BOTTOM]);
     turnXLayer90(f, d, b, u, 2);
-    rotateFace90(&(cube->Right), CW);
+    rotateFace90(&((*cube)[RIGHT]), CW);
 }
 
 void Rp(Cube *cube)
 {
-    Face *f = &(cube->Front);
-    Face *u = &(cube->Top);
-    Face *b = &(cube->Back);
-    Face *d = &(cube->Bottom);
+    Face *f = &((*cube)[FRONT]);
+    Face *u = &((*cube)[TOP]);
+    Face *b = &((*cube)[BACK]);
+    Face *d = &((*cube)[BOTTOM]);
     turnXLayer90(f, u, b, d, 2);
-    rotateFace90(&(cube->Right), CCW);
+    rotateFace90(&((*cube)[RIGHT]), CCW);
 }
 
 void R2(Cube *cube)
-{
-    Face *f = &(cube->Front);
-    Face *u = &(cube->Top);
-    Face *b = &(cube->Back);
-    Face *d = &(cube->Bottom);
+{   
+    Face *f = &((*cube)[FRONT]);
+    Face *u = &((*cube)[TOP]);
+    Face *b = &((*cube)[BACK]);
+    Face *d = &((*cube)[BOTTOM]);
     turnXLayer180(f, d, b, u, 2);
-    rotateFace180(&(cube->Right));
+    rotateFace180(&((*cube)[RIGHT]));
 }
 
 /**************************** L Moves ******************************/
 
 void L(Cube *cube)
 {
-    Face *f = &(cube->Front);
-    Face *u = &(cube->Top);
-    Face *b = &(cube->Back);
-    Face *d = &(cube->Bottom);
+    Face *f = &((*cube)[FRONT]);
+    Face *u = &((*cube)[TOP]);
+    Face *b = &((*cube)[BACK]);
+    Face *d = &((*cube)[BOTTOM]);
     turnXLayer90(f, u, b, d, 0);
-    rotateFace90(&(cube->Left), CW);
+    rotateFace90(&((*cube)[LEFT]), CW);
 }
 
 void Lp(Cube *cube)
 {
-    Face *f = &(cube->Front);
-    Face *u = &(cube->Top);
-    Face *b = &(cube->Back);
-    Face *d = &(cube->Bottom);
+    Face *f = &((*cube)[FRONT]);
+    Face *u = &((*cube)[TOP]);
+    Face *b = &((*cube)[BACK]);
+    Face *d = &((*cube)[BOTTOM]);
     turnXLayer90(f, d, b, u, 0);
-    rotateFace90(&(cube->Left), CCW);
+    rotateFace90(&((*cube)[LEFT]), CCW);
 }
 
 void L2(Cube *cube)
 {
-    Face *f = &(cube->Front);
-    Face *u = &(cube->Top);
-    Face *b = &(cube->Back);
-    Face *d = &(cube->Bottom);
+    Face *f = &((*cube)[FRONT]);
+    Face *u = &((*cube)[TOP]);
+    Face *b = &((*cube)[BACK]);
+    Face *d = &((*cube)[BOTTOM]);
     turnXLayer180(f, u, b, d, 0);
-    rotateFace180(&(cube->Left));
+    rotateFace180(&((*cube)[LEFT]));
 }
 
 /**************************** M Moves ******************************/
 
 void M(Cube *cube)
 {
-    Face *f = &(cube->Front);
-    Face *u = &(cube->Top);
-    Face *b = &(cube->Back);
-    Face *d = &(cube->Bottom);
+    Face *f = &((*cube)[FRONT]);
+    Face *u = &((*cube)[TOP]);
+    Face *b = &((*cube)[BACK]);
+    Face *d = &((*cube)[BOTTOM]);
     turnXLayer90(f, d, b, u, 1);
 }
 
 void Mp(Cube *cube)
 {
-    Face *f = &(cube->Front);
-    Face *u = &(cube->Top);
-    Face *b = &(cube->Back);
-    Face *d = &(cube->Bottom);
+    Face *f = &((*cube)[FRONT]);
+    Face *u = &((*cube)[TOP]);
+    Face *b = &((*cube)[BACK]);
+    Face *d = &((*cube)[BOTTOM]);;
     turnXLayer90(f, u, b, d, 1);
 }
 
 void M2(Cube *cube)
 {
-    Face *f = &(cube->Front);
-    Face *u = &(cube->Top);
-    Face *b = &(cube->Back);
-    Face *d = &(cube->Bottom);
+    Face *f = &((*cube)[FRONT]);
+    Face *u = &((*cube)[TOP]);
+    Face *b = &((*cube)[BACK]);
+    Face *d = &((*cube)[BOTTOM]);
     turnXLayer180(f, d, b, u, 1);
 }
 
@@ -510,62 +510,62 @@ static void turnZLayer180(Face *f1, Face *f2, Face *f3, Face *f4, int col)
 
 void F(Cube *cube)
 {
-    Face *r = &(cube->Right);
-    Face *u = &(cube->Top);
-    Face *l = &(cube->Left);
-    Face *d = &(cube->Bottom);
+    Face *r = &((*cube)[RIGHT]);
+    Face *u = &((*cube)[TOP]);
+    Face *l = &((*cube)[LEFT]);
+    Face *d = &((*cube)[BOTTOM]);
     turnZLayer90CW(r, u, l, d, 0);
-    rotateFace90(&(cube->Front), CW);
+    rotateFace90(&((*cube)[FRONT]), CW);
 }
 
 void Fp(Cube *cube)
 {
-    Face *r = &(cube->Right);
-    Face *u = &(cube->Top);
-    Face *l = &(cube->Left);
-    Face *d = &(cube->Bottom);
+    Face *r = &((*cube)[RIGHT]);
+    Face *u = &((*cube)[TOP]);
+    Face *l = &((*cube)[LEFT]);
+    Face *d = &((*cube)[BOTTOM]);
     turnZLayer90CCW(r, d, l, u, 0);
-    rotateFace90(&(cube->Front), CCW);
+    rotateFace90(&((*cube)[FRONT]), CCW);
 }
 
 void F2(Cube *cube)
 {
-    Face *r = &(cube->Right);
-    Face *u = &(cube->Top);
-    Face *l = &(cube->Left);
-    Face *d = &(cube->Bottom);
+    Face *r = &((*cube)[RIGHT]);
+    Face *u = &((*cube)[TOP]);
+    Face *l = &((*cube)[LEFT]);
+    Face *d = &((*cube)[BOTTOM]);
     turnZLayer180(r, u, l, d, 0);
-    rotateFace180(&(cube->Front));
+    rotateFace180(&((*cube)[FRONT]));
 }
 
 /**************************** F Moves ******************************/
 
 void B(Cube *cube)
 {
-    Face *r = &(cube->Right);
-    Face *u = &(cube->Top);
-    Face *l = &(cube->Left);
-    Face *d = &(cube->Bottom);
+    Face *r = &((*cube)[RIGHT]);
+    Face *u = &((*cube)[TOP]);
+    Face *l = &((*cube)[LEFT]);
+    Face *d = &((*cube)[BOTTOM]);
     turnZLayer90CW(r, d, l, u, 2);
-    rotateFace90(&(cube->Back), CW);
+    rotateFace90(&((*cube)[BACK]), CW);
 }
 
 void Bp(Cube *cube)
 {
-    Face *r = &(cube->Right);
-    Face *u = &(cube->Top);
-    Face *l = &(cube->Left);
-    Face *d = &(cube->Bottom);
+    Face *r = &((*cube)[RIGHT]);
+    Face *u = &((*cube)[TOP]);
+    Face *l = &((*cube)[LEFT]);
+    Face *d = &((*cube)[BOTTOM]);
     turnZLayer90CCW(r, u, l, d, 2);
-    rotateFace90(&(cube->Back), CCW);
+    rotateFace90(&((*cube)[BACK]), CCW);
 }
 
 void B2(Cube *cube)
 {
-    Face *r = &(cube->Right);
-    Face *u = &(cube->Top);
-    Face *l = &(cube->Left);
-    Face *d = &(cube->Bottom);
+    Face *r = &((*cube)[RIGHT]);
+    Face *u = &((*cube)[TOP]);
+    Face *l = &((*cube)[LEFT]);
+    Face *d = &((*cube)[BOTTOM]);
     turnZLayer180(r, d, l, u, 2);
-    rotateFace180(&(cube->Back));
+    rotateFace180(&((*cube)[BACK]));
 }

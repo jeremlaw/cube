@@ -35,12 +35,12 @@ Cube *newCube()
 
     for (int row = 0; row < 3; row++) {
         for (int col = 0; col < 3; col++) {
-            cube->Front[row][col] = RED;
-            cube->Top[row][col] = YELLOW;
-            cube->Back[row][col] = ORANGE;
-            cube->Bottom[row][col] = WHITE;
-            cube->Right[row][col] = GREEN;
-            cube->Left[row][col] = BLUE;
+            (*cube)[LEFT][row][col] = BLUE;
+            (*cube)[FRONT][row][col] = RED;
+            (*cube)[RIGHT][row][col] = GREEN;
+            (*cube)[TOP][row][col] = YELLOW;
+            (*cube)[BACK][row][col] = ORANGE;
+            (*cube)[BOTTOM][row][col] = WHITE;
         }
     }
     return cube;
@@ -105,12 +105,9 @@ void display(Cube *cube)
 {
     printf("Left    Front   Right    Top    Back    Bottom\n");
     for (int row = 0; row < 3; row++) {
-        printRow(&(cube->Left), row);
-        printRow(&(cube->Front), row);
-        printRow(&(cube->Right), row);
-        printRow(&(cube->Top), row);
-        printRow(&(cube->Back), row);
-        printRow(&(cube->Bottom), row);
+        for (Side side = LEFT; side <= BOTTOM; side++) {
+            printRow(&((*cube)[side]), row);
+        }
         printf("\n");
     }
     printf("\n");

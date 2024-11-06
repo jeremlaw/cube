@@ -19,7 +19,8 @@ int main()
     Cube *cube = newCube();
     printf("Welcome to the cube simulator! This is your cube:\n\n");
     display(cube);
-    printf("Enter any move. Type h for help, or q to quit. \n");
+    printf("Enter any move or sequence of moves\n");
+    printf("or type h for help, or q to quit. \n");
     char s[] = "  ";
     while (strcmp(s, "q") != 0) {
         scanf("%s", s);
@@ -28,11 +29,14 @@ int main()
             freeCube(cube);
             return 0;
         }
+        /* In Progress */
         else if (strcmp(s, "h") == 0) {
+            printf("\n\033[32m");
             printf("----------------- Help Center -----------------\n\n");
             printf("Sorry, we are currently busy. Please leave a\n");
             printf("message and we be with you as soon as possible.\n\n");
             printf("-----------------------------------------------\n");
+            printf("\033[0m");
         }
         else {
             if (strcmp(s, "R") == 0) {
@@ -99,8 +103,12 @@ int main()
                 M2(cube);
             }
             else {
-                printf("Oops! Invalid turn. Choose from the following turns:\n\n");
-                printf("R R' R2 L L' L2 U U' U2 D D' D2 F F' F2 B B' B2 M M' M2\n\n");
+                printf("\n\033[31m");
+                printf("Oops! Invalid turn. Choose from the following turns:");
+                printf("\n\n\033[0m");
+                printf("\033[32m");
+                printf("R R' R2 L L' L2 U U' U2 D D' D2 F F' F2 B B' B2 M M' M2");
+                printf("\n\n\033[0m");
                 printf("Your current cube:\n\n");
             }
             display(cube);

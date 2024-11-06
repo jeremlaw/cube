@@ -8,12 +8,14 @@ CC = gcc # The compiler being used
 CFLAGS = -g # Compiler flags
 RM = rm -f # Command to remove files
 
-TARGET = cubesim # Target executable
-OBJS = cube.o cubesim.o moves.o # Object files needed for target 
+TARGET1 = cubesim # Target executable 1
+TARGET2 = solver # Target executable 2
+OBJS1 = cube.o moves.o cubesim.o # Object files needed for target 1
+OBJS2 = cube.o moves.o white_cross.o solver.o  # Object files needed for target 2
 
 ############### Rules ###############
 
-all: cubesim
+all: cubesim solver
 
 ## Compile step (.c files -> .o files)
 
@@ -24,8 +26,11 @@ all: cubesim
 
 ## Linking step (.o -> executable program)
 
-$(TARGET): $(OBJS) 
+$(TARGET1): $(OBJS1) 
+	$(CC) $(CFLAGS) $^ -o $@
+
+$(TARGET2): $(OBJS2) 
 	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
-	$(RM) $(TARGET) $(OBJS)
+	$(RM) $(TARGET) $(OBJS1) $(OBJS2)
