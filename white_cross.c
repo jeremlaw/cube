@@ -59,12 +59,29 @@ static Petal getPetal(Cube *cube, Side side)
     return p;
 }
 
-static void moveDaisy(Cube *cube, int row, int col)
-{  
-    while ((*cube)[TOP][row][col] == WHITE) {
-        U(cube);
-        display(cube);
+static Color CWPetal(Face *top, int row, int col)
+{
+    if (col == 1) {
+        return (*top)[col][2 - row];
     }
+    return (*top)[2 - col][row];
+}
+
+static void moveDaisy(Cube *cube, int row, int col)
+{
+    Face *top = &(*cube)[TOP];
+    if ((*top)[row][col] != WHITE) {
+        return;
+    }
+    if (CWPetal(top, row, col) != WHITE) {
+        Up(cube);
+        return;
+    }
+    if ((*top)[2 - row][2 - col] != WHITE) {
+        U2(cube);
+        return;
+    }
+    U(cube);
 }
 
 static void placePetal(Petal *petal, Side side, Cube *cube)
@@ -72,95 +89,90 @@ static void placePetal(Petal *petal, Side side, Cube *cube)
     /* Petals in col 1 need to be moved to col 0 or 2 */
     if (petal->col == 1) {
 
-        if (side == FRONT) {
-            moveDaisy(cube, 2, 1);
-            F(cube);
-            display(cube);
-        }
-        else if (side == LEFT) {
+        if (side == LEFT) {
             moveDaisy(cube, 1, 0);
             L(cube);
-            display(cube);
         }
+        else if (side == FRONT) {
+            moveDaisy(cube, 2, 1);
+            F(cube);
+        } 
         else if (side == RIGHT) {
             moveDaisy(cube, 1, 2);
             R(cube);
-            display(cube);
         }
         else if (side == BACK) {
             moveDaisy(cube, 0, 1);
             B(cube);
-            display(cube);
         }
+        if (petal->row == 0) {
+            petal->row++;
+            petal->col++;
+        } else {
+            petal->row--;
+            petal->col--;
+        }
+    }
+
+    if (side == LEFT) {
+        moveDaisy(cube, petal->col, 1);
+        if (petal->col == 0) {
+            Bp(cube);
+        } else if (petal->col == 2) {
+            F(cube);
+        }
+        return;
+    }
+
+    if (side == FRONT) {
+        moveDaisy(cube, 1, petal->col);
+        if (petal->col == 0) {
+            Lp(cube);
+        } else if (petal->col == 2) {
+            R(cube);
+        }
+        return;
+    }
+
+    if (side == RIGHT) {
+        moveDaisy(cube, 2 - petal->col, 1);
+        if (petal->col == 0) {
+            Fp(cube);
+        } else if (petal->col == 2) {
+            B(cube);
+        }
+        return;
+    }
+
+    if (side == BACK) {
+        moveDaisy(cube, 1, petal->col);
+        if (petal->col == 0) {
+            L(cube);
+        } else if (petal->col == 2) {
+            Rp(cube);
+        }
+        return;
     }
 
     /* Special case: bottom petals can be moved in one move
      * after moving the daisy */
     if (side == BOTTOM) {
-        moveDaisy(cube, petal->row, petal->col);
+        moveDaisy(cube, 2 - petal->row, petal->col);
         if (petal->row == 0) {
             F2(cube);
-            display(cube);
         }
         else if (petal->row == 2) {
             B2(cube);
-            display(cube);
         }
         else if (petal->col == 0) {
             L2(cube);
-            display(cube);
         }
         else if (petal->col == 2) {
             R2(cube);
-            display(cube);
         }
         return;
     }
     
-    if (side == FRONT) {
-        moveDaisy(cube, 1, petal->col);
-        if (petal->col == 0) {
-            Lp(cube);
-            display(cube);
-        } else {
-            R(cube);
-            display(cube);
-        }
-        return;
-    }
-    if (side == LEFT) {
-        moveDaisy(cube, petal->col, 1);
-        if (petal->col == 0) {
-            Bp(cube);
-            display(cube);
-        } else {
-            F(cube);
-            display(cube);
-        }
-        return;
-    }
-    if (side == RIGHT) {
-        moveDaisy(cube, 2 - petal->col, 1);
-        if (petal->col == 0) {
-            Fp(cube);
-            display(cube);
-        } else {
-            B(cube);
-            display(cube);
-        }
-        return;
-    }
-    if (side == BACK) {
-        moveDaisy(cube, 1, petal->col);
-        if (petal->col == 0) {
-            L(cube);
-            display(cube);
-        } else {
-            Rp(cube);
-            display(cube);
-        }
-        return;
-    }
 }
 
 static void findPetal(Cube *cube)
@@ -175,7 +187,6 @@ static void findPetal(Cube *cube)
                 if (petal.valid) {
                     iter++;
                     placePetal(&petal, side, cube);
-                    //display(cube);
                 }
             }
         }
@@ -188,38 +199,34 @@ static void findPetal(Cube *cube)
 void daisy(Cube *cube)
 {
     findPetal(cube);
+    display(cube);
 }
 
 void white_cross(Cube *cube)
 {
-    while ((*cube)[LEFT][0][1] != (*cube)[LEFT][1][1]) {
-        U(cube);
-        display(cube);
-    }
-    L2(cube);
-    display(cube);
+    int iter = 0;
+    while (numPetals(cube) != 0 && iter < 50) {
+        Face *left = &(*cube)[LEFT];
+        Face *front = &(*cube)[FRONT];
+        Face *right = &(*cube)[RIGHT];
+        Face *top = &(*cube)[TOP];
+        Face *back = &(*cube)[BACK];
 
-    while ((*cube)[FRONT][0][1] != (*cube)[FRONT][1][1] &&
-           (*cube)[TOP][2][1] != WHITE) {
-        U(cube);
-        display(cube);
+        if ((*left)[0][1] == (*left)[1][1] && (*top)[1][0] == WHITE) {
+            L2(cube);
+        }
+        if ((*front)[0][1] == (*front)[1][1] && (*top)[2][1] == WHITE) {
+            F2(cube);
+        }
+        if ((*right)[0][1] == (*right)[1][1] && (*top)[1][2] == WHITE) {
+            R2(cube);
+        }
+        if ((*back)[2][1] == (*back)[1][1] && (*top)[0][1] == WHITE) {
+            B2(cube);
+        }
+        if (numPetals(cube) != 0) {
+            U(cube);
+        }
+        iter++;
     }
-    F2(cube);
-    display(cube);
-
-    while ((*cube)[RIGHT][0][1] != (*cube)[RIGHT][1][1] &&
-           (*cube)[TOP][1][2] != WHITE) {
-        U(cube);
-        display(cube);
-    }
-    R2(cube);
-    display(cube);
-
-    while ((*cube)[BACK][2][1] != (*cube)[BACK][1][1] &&
-           (*cube)[TOP][0][1] != WHITE) {
-        U(cube);
-        display(cube);
-    }
-    B2(cube);
-    display(cube);
 }

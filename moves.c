@@ -171,6 +171,7 @@ void U(Cube *cube)
     Face *b = &((*cube)[BACK]);
     turnYLayer90(f, r, b, l, 0);
     rotateFace90(&((*cube)[TOP]), CW);
+    printf("U ");
 }
 
 void Up(Cube *cube)
@@ -181,6 +182,7 @@ void Up(Cube *cube)
     Face *b = &((*cube)[BACK]);
     turnYLayer90(f, l, b, r, 0);
     rotateFace90(&((*cube)[TOP]), CCW);
+    printf("U' ");
 }
 
 void U2(Cube *cube)
@@ -191,6 +193,7 @@ void U2(Cube *cube)
     Face *b = &((*cube)[BACK]);
     turnYLayer180(f, r, b, l, 0);
     rotateFace180(&((*cube)[TOP]));
+    printf("U2 ");
 }
 
 /**************************** D Moves ******************************/
@@ -203,6 +206,7 @@ void D(Cube *cube)
     Face *b = &((*cube)[BACK]);
     turnYLayer90(f, l, b, r, 2);
     rotateFace90(&((*cube)[BOTTOM]), CW);
+    printf("D ");
 }
 
 void Dp(Cube *cube)
@@ -213,6 +217,7 @@ void Dp(Cube *cube)
     Face *b = &((*cube)[BACK]);
     turnYLayer90(f, r, b, l, 2);
     rotateFace90(&((*cube)[BOTTOM]), CCW);
+    printf("D' ");
 }
 
 void D2(Cube *cube)
@@ -223,6 +228,7 @@ void D2(Cube *cube)
     Face *b = &((*cube)[BACK]);
     turnYLayer180(f, l, b, r, 2);
     rotateFace180(&((*cube)[BOTTOM]));
+    printf("D2 ");
 }
 
 /*************************************************************************
@@ -299,6 +305,7 @@ void R(Cube *cube)
     Face *d = &((*cube)[BOTTOM]);
     turnXLayer90(f, d, b, u, 2);
     rotateFace90(&((*cube)[RIGHT]), CW);
+    printf("R ");
 }
 
 void Rp(Cube *cube)
@@ -309,6 +316,7 @@ void Rp(Cube *cube)
     Face *d = &((*cube)[BOTTOM]);
     turnXLayer90(f, u, b, d, 2);
     rotateFace90(&((*cube)[RIGHT]), CCW);
+    printf("R' ");
 }
 
 void R2(Cube *cube)
@@ -319,6 +327,7 @@ void R2(Cube *cube)
     Face *d = &((*cube)[BOTTOM]);
     turnXLayer180(f, d, b, u, 2);
     rotateFace180(&((*cube)[RIGHT]));
+    printf("R2 ");
 }
 
 /**************************** L Moves ******************************/
@@ -331,6 +340,7 @@ void L(Cube *cube)
     Face *d = &((*cube)[BOTTOM]);
     turnXLayer90(f, u, b, d, 0);
     rotateFace90(&((*cube)[LEFT]), CW);
+    printf("L ");
 }
 
 void Lp(Cube *cube)
@@ -341,6 +351,7 @@ void Lp(Cube *cube)
     Face *d = &((*cube)[BOTTOM]);
     turnXLayer90(f, d, b, u, 0);
     rotateFace90(&((*cube)[LEFT]), CCW);
+    printf("L' ");
 }
 
 void L2(Cube *cube)
@@ -351,6 +362,7 @@ void L2(Cube *cube)
     Face *d = &((*cube)[BOTTOM]);
     turnXLayer180(f, u, b, d, 0);
     rotateFace180(&((*cube)[LEFT]));
+    printf("L2 ");
 }
 
 /**************************** M Moves ******************************/
@@ -362,6 +374,7 @@ void M(Cube *cube)
     Face *b = &((*cube)[BACK]);
     Face *d = &((*cube)[BOTTOM]);
     turnXLayer90(f, d, b, u, 1);
+    printf("M ");
 }
 
 void Mp(Cube *cube)
@@ -371,6 +384,7 @@ void Mp(Cube *cube)
     Face *b = &((*cube)[BACK]);
     Face *d = &((*cube)[BOTTOM]);;
     turnXLayer90(f, u, b, d, 1);
+    printf("M' ");
 }
 
 void M2(Cube *cube)
@@ -380,6 +394,7 @@ void M2(Cube *cube)
     Face *b = &((*cube)[BACK]);
     Face *d = &((*cube)[BOTTOM]);
     turnXLayer180(f, d, b, u, 1);
+    printf("M2 ");
 }
 
 /*************************************************************************
@@ -516,6 +531,7 @@ void F(Cube *cube)
     Face *d = &((*cube)[BOTTOM]);
     turnZLayer90CW(r, u, l, d, 0);
     rotateFace90(&((*cube)[FRONT]), CW);
+    printf("F ");
 }
 
 void Fp(Cube *cube)
@@ -526,6 +542,7 @@ void Fp(Cube *cube)
     Face *d = &((*cube)[BOTTOM]);
     turnZLayer90CCW(r, d, l, u, 0);
     rotateFace90(&((*cube)[FRONT]), CCW);
+    printf("F' ");
 }
 
 void F2(Cube *cube)
@@ -536,6 +553,7 @@ void F2(Cube *cube)
     Face *d = &((*cube)[BOTTOM]);
     turnZLayer180(r, u, l, d, 0);
     rotateFace180(&((*cube)[FRONT]));
+    printf("F2 ");
 }
 
 /**************************** F Moves ******************************/
@@ -548,6 +566,7 @@ void B(Cube *cube)
     Face *d = &((*cube)[BOTTOM]);
     turnZLayer90CW(r, d, l, u, 2);
     rotateFace90(&((*cube)[BACK]), CW);
+    printf("B ");
 }
 
 void Bp(Cube *cube)
@@ -558,6 +577,7 @@ void Bp(Cube *cube)
     Face *d = &((*cube)[BOTTOM]);
     turnZLayer90CCW(r, u, l, d, 2);
     rotateFace90(&((*cube)[BACK]), CCW);
+    printf("B' ");
 }
 
 void B2(Cube *cube)
@@ -568,4 +588,5 @@ void B2(Cube *cube)
     Face *d = &((*cube)[BOTTOM]);
     turnZLayer180(r, d, l, u, 2);
     rotateFace180(&((*cube)[BACK]));
+    printf("B2 ");
 }

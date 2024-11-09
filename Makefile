@@ -10,7 +10,7 @@ RM = rm -f # Command to remove files
 
 TARGET1 = cubesim # Target executable 1
 TARGET2 = solver # Target executable 2
-OBJS1 = cube.o moves.o cubesim.o # Object files needed for target 1
+OBJS1 = cube.o moves.o cubesim.o white_cross.o # Object files needed for target 1
 OBJS2 = cube.o moves.o white_cross.o solver.o  # Object files needed for target 2
 
 ############### Rules ###############

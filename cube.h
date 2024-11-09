@@ -17,15 +17,6 @@ typedef enum { LEFT, FRONT, RIGHT, TOP, BACK, BOTTOM } Side;
 
 typedef Face Cube[6];
 
-// typedef struct {
-//     Face Front;
-//     Face Top;
-//     Face Back;
-//     Face Bottom;
-//     Face Left;
-//     Face Right;
-// } Cube;
-
 Cube *newCube();
 void freeCube(Cube *cube);
 void display(Cube *cube);

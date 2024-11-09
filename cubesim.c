@@ -12,6 +12,7 @@
 #include <string.h>
 #include "cube.h"
 #include "moves.h"
+#include "white_cross.h"
 
 int main()
 {   
@@ -21,7 +22,7 @@ int main()
     display(cube);
     printf("Enter any move or sequence of moves\n");
     printf("or type h for help, or q to quit. \n");
-    char s[] = "  ";
+    char s[] = "     ";
     while (strcmp(s, "q") != 0) {
         scanf("%s", s);
         if (strcmp(s, "q") == 0) {
@@ -101,6 +102,10 @@ int main()
             }
             else if (strcmp(s, "M2") == 0) {
                 M2(cube);
+            }
+            else if (strcmp(s, "solve") == 0) {
+                daisy(cube);
+                white_cross(cube);
             }
             else {
                 printf("\n\033[31m");
