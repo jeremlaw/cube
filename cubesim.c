@@ -5,7 +5,11 @@
  *     Program that simulates a Rubik's Cube, allowing the user
  *     to interact and perform a variety of turns. These include:
  *     R, R', R2, L, L', L2, U, U', U2, D, D', D2, F, F', F2,
- *     B, B', B2, M, M', and M2.
+ *     B, B', B2, M, M', and M2. Also allows user to solve the
+ *     cube in its current state.
+ * 
+ *     Note: Currently only supports solving the white cross.
+ *           Other stages are in progress.
  *
  **************************************************************/
 #include <stdio.h>
@@ -21,7 +25,7 @@ int main()
     printf("Welcome to the cube simulator! This is your cube:\n\n");
     display(cube);
     printf("Enter any move or sequence of moves\n");
-    printf("or type h for help, or q to quit. \n");
+    printf("or type h for help, or q to quit.\n");
     char s[] = "     ";
     while (strcmp(s, "q") != 0) {
         scanf("%s", s);
